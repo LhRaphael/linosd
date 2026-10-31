@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=LinOSD
+GenericName=Monitor de desempenho para jogos
+Comment=Overlay com FPS, 1% low, uso de CPU/GPU, RAM, VRAM e temperaturas
+Exec=linosd
+Icon=linosd
+Terminal=false
+Categories=Utility;System;Monitor;Game;
+Keywords=fps;overlay;osd;afterburner;gpu;cpu;benchmark;

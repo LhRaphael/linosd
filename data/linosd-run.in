@@ -1,0 +1,57 @@
+#!/usr/bin/env bash
+# linosd-run - inicia um jogo com o LinOSD ativo.
+#
+#   Steam (Opções de inicialização):  linosd-run %command%
+#   Terminal:                         linosd-run [opções] <comando> [args...]
+#
+# Opções:
+#   --fps-limit N   limita o FPS (pode ser alterado depois na interface)
+#   --no-gl         não injeta o hook OpenGL (somente a camada Vulkan)
+#   --no-app        não abre o aplicativo do overlay automaticamente
+#   -h, --help      ajuda
+set -u
+
+HOOK_ROOT="@HOOK_ROOT@"
+LINOSD_BIN="@LINOSD_BIN@"
+
+use_gl=1
+start_app=1
+while [ $# -gt 0 ]; do
+    case "$1" in
+        --fps-limit) export LINOSD_FPS_LIMIT="${2:-0}"; shift 2 ;;
+        --fps-limit=*) export LINOSD_FPS_LIMIT="${1#*=}"; shift ;;
+        --no-gl) use_gl=0; shift ;;
+        --no-app) start_app=0; shift ;;
+        -h|--help)
+            sed -n '2,13p' "$0" | sed 's/^# \{0,1\}//'
+            exit 0 ;;
+        --) shift; break ;;
+        *) break ;;
+    esac
+done
+
+if [ $# -eq 0 ]; then
+    echo "uso: linosd-run [opções] <comando> [args...]" >&2
+    exit 1
+fi
+
+# Abre o overlay (uma única instância) fora do ambiente do jogo.
+if [ "$start_app" = 1 ] && [ -x "$LINOSD_BIN" ]; then
+    if ! pgrep -u "$(id -u)" -x linosd >/dev/null 2>&1; then
+        # setsid: o overlay não recebe sinais do grupo de processos do jogo (ex.: Ctrl+C).
+        setsid env -u LD_PRELOAD -u LINOSD -u LINOSD_FPS_LIMIT "$LINOSD_BIN" --minimized >/dev/null 2>&1 < /dev/null &
+        disown 2>/dev/null || true
+    fi
+fi
+
+# Camada Vulkan implícita (habilitada pela variável abaixo, ver manifesto JSON).
+export LINOSD=1
+
+# Hook OpenGL: o ld.so expande $LIB conforme a arquitetura de cada processo
+# (o install.sh cria os links), carregando a versão certa em jogos 32 e 64 bits.
+if [ "$use_gl" = 1 ]; then
+    gl_lib="${HOOK_ROOT}/\$LIB/liblinosd_gl.so"
+    export LD_PRELOAD="${gl_lib}${LD_PRELOAD:+:$LD_PRELOAD}"
+fi
+
+exec "$@"

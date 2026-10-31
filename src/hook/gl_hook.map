@@ -1,0 +1,12 @@
+{
+  global:
+    glXSwapBuffers;
+    glXGetProcAddress;
+    glXGetProcAddressARB;
+    eglSwapBuffers;
+    eglSwapBuffersWithDamageKHR;
+    eglSwapBuffersWithDamageEXT;
+    eglGetProcAddress;
+    dlsym;
+  local: *;
+};
