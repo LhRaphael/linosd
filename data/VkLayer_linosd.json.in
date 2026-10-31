@@ -1,0 +1,22 @@
+{
+    "file_format_version": "1.0.0",
+    "layer": {
+        "name": "VK_LAYER_LINOSD_overlay_@ARCH@",
+        "type": "GLOBAL",
+        "library_path": "@LIBRARY_PATH@",
+        "api_version": "1.3.0",
+        "implementation_version": "1",
+        "description": "LinOSD - captura de frametimes para o overlay de desempenho",
+        "functions": {
+            "vkGetInstanceProcAddr": "linosd_GetInstanceProcAddr",
+            "vkGetDeviceProcAddr": "linosd_GetDeviceProcAddr",
+            "vkNegotiateLoaderLayerInterfaceVersion": "linosd_NegotiateLoaderLayerInterfaceVersion"
+        },
+        "enable_environment": {
+            "LINOSD": "1"
+        },
+        "disable_environment": {
+            "DISABLE_LINOSD": "1"
+        }
+    }
+}

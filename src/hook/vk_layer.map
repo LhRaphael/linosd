@@ -1,0 +1,7 @@
+{
+  global:
+    linosd_GetInstanceProcAddr;
+    linosd_GetDeviceProcAddr;
+    linosd_NegotiateLoaderLayerInterfaceVersion;
+  local: *;
+};
