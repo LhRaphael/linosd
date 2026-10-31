@@ -46,5 +46,5 @@ ls -1 build/linosd build/liblinosd_vk.so build/liblinosd_gl.so
 [ $with32 = 1 ] && ls -1 build32/liblinosd_vk.so build32/liblinosd_gl.so
 echo
 echo "Testar sem instalar:  ./build/linosd"
-echo "Instalar:             ./scripts/install.sh            (em ~/.local)"
-echo "                      ./scripts/install.sh --system   (em /usr/local, requer sudo)"
+echo "Instalar (Debian/Ubuntu/Mint): ./scripts/install.sh        (gera o .deb e instala com o apt)"
+echo "Só para o usuário:             ./scripts/install.sh --user (em ~/.local)"

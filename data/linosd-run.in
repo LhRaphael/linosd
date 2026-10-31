@@ -11,7 +11,10 @@
 #   -h, --help      ajuda
 set -u
 
-HOOK_ROOT="@HOOK_ROOT@"
+# Caminho do hook OpenGL. "$LIB" é literal: o ld.so o expande para o diretório de
+# bibliotecas da arquitetura de cada processo (ex.: lib/x86_64-linux-gnu ou
+# lib/i386-linux-gnu no Debian/Ubuntu), carregando a versão certa em jogos 32 e 64 bits.
+GL_PRELOAD='@GL_PRELOAD@'
 LINOSD_BIN="@LINOSD_BIN@"
 
 use_gl=1
@@ -47,11 +50,9 @@ fi
 # Camada Vulkan implícita (habilitada pela variável abaixo, ver manifesto JSON).
 export LINOSD=1
 
-# Hook OpenGL: o ld.so expande $LIB conforme a arquitetura de cada processo
-# (o install.sh cria os links), carregando a versão certa em jogos 32 e 64 bits.
+# Hook OpenGL (LD_PRELOAD).
 if [ "$use_gl" = 1 ]; then
-    gl_lib="${HOOK_ROOT}/\$LIB/liblinosd_gl.so"
-    export LD_PRELOAD="${gl_lib}${LD_PRELOAD:+:$LD_PRELOAD}"
+    export LD_PRELOAD="${GL_PRELOAD}${LD_PRELOAD:+:$LD_PRELOAD}"
 fi
 
 exec "$@"

@@ -1,0 +1,43 @@
+.TH LINOSD-RUN 1 "2026" "LinOSD @VERSION@" "Comandos do usuário"
+.SH NOME
+linosd\-run \- inicia um jogo com o overlay de desempenho LinOSD
+.SH SINOPSE
+.B linosd\-run
+[\fB\-\-fps\-limit\fR \fIN\fR] [\fB\-\-no\-gl\fR] [\fB\-\-no\-app\fR] [\fB\-\-\fR]
+.I comando
+[\fIargumentos\fR...]
+.SH DESCRIÇÃO
+.B linosd\-run
+ativa a camada Vulkan do LinOSD (LINOSD=1) e o hook OpenGL (LD_PRELOAD),
+abre o
+.BR linosd (1)
+se ele ainda não estiver em execução e então executa o
+.IR comando .
+.PP
+Na Steam, use nas opções de inicialização do jogo:
+.PP
+.RS
+.B linosd\-run %command%
+.RE
+.PP
+No Lutris, use como prefixo de comando; no Heroic, como wrapper.
+.SH OPÇÕES
+.TP
+.BI \-\-fps\-limit " N"
+Limita o jogo a N quadros por segundo (pode ser alterado depois na interface).
+.TP
+.B \-\-no\-gl
+Não injeta o hook OpenGL; usa somente a camada Vulkan.
+.TP
+.B \-\-no\-app
+Não abre o aplicativo do overlay automaticamente.
+.TP
+.B \-\-
+Encerra o processamento de opções.
+.SH EXEMPLOS
+.TP
+.B linosd\-run vkcube
+.TP
+.B linosd\-run \-\-fps\-limit 60 %command%
+.SH VEJA TAMBÉM
+.BR linosd (1)

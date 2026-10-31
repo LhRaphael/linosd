@@ -1,0 +1,62 @@
+.TH LINOSD 1 "2026" "LinOSD @VERSION@" "Comandos do usuário"
+.SH NOME
+linosd \- overlay de desempenho para jogos (FPS, 1% low, CPU, GPU, RAM, VRAM)
+.SH SINOPSE
+.B linosd
+[\fB\-\-minimized\fR]
+.br
+.B linosd
+\fB\-\-toggle\fR | \fB\-\-quit\fR | \fB\-\-fps\-limit\fR \fIN\fR | \fB\-\-probe\fR
+.SH DESCRIÇÃO
+.B linosd
+exibe um OSD sobre o jogo com FPS, frametime, 1% e 0.1% low, gráfico de frametime,
+uso, temperatura, clock e consumo de CPU e GPU, RAM, swap, VRAM e outras métricas,
+e abre a janela de personalização (cores, fontes, contorno, sombra, fundo e posição).
+.PP
+Os frames do jogo são capturados por uma camada Vulkan implícita e por um hook OpenGL,
+ativados ao iniciar o jogo com
+.BR linosd\-run (1).
+Se uma instância já estiver em execução, executar
+.B linosd
+apenas traz a janela de configuração para a frente.
+.SH OPÇÕES
+.TP
+.B \-\-minimized
+Inicia somente com o overlay e o ícone na bandeja do sistema.
+.TP
+.B \-\-toggle
+Mostra ou oculta o overlay da instância em execução. Associe a um atalho de teclado.
+.TP
+.BI \-\-fps\-limit " N"
+Altera o limitador de FPS da instância em execução (0 desliga).
+.TP
+.B \-\-quit
+Encerra a instância em execução.
+.TP
+.B \-\-probe
+Modo de diagnóstico: imprime no terminal as métricas lidas, sem interface gráfica.
+.TP
+.BR \-h ", " \-\-help
+Mostra a ajuda.
+.SH ARQUIVOS
+.TP
+.I ~/.config/linosd/config.json
+Configuração do usuário (salva automaticamente pela interface).
+.TP
+.I /usr/share/vulkan/implicit_layer.d/linosd_*.json
+Manifestos da camada Vulkan (ativada pela variável LINOSD=1).
+.TP
+.I /dev/shm/linosd.<pid>
+Memória compartilhada com os tempos de frame de cada jogo.
+.SH AMBIENTE
+.TP
+.B LINOSD=1
+Ativa a camada Vulkan no processo.
+.TP
+.B DISABLE_LINOSD=1
+Desativa a camada Vulkan mesmo com LINOSD=1.
+.TP
+.BI LINOSD_FPS_LIMIT= N
+Limite de FPS inicial do jogo.
+.SH VEJA TAMBÉM
+.BR linosd\-run (1)

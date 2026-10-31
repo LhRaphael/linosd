@@ -14,9 +14,12 @@
 #include <cstring>
 
 #include <QApplication>
+#include <QDir>
 #include <QCommandLineParser>
 #include <QLocalServer>
 #include <QLocalSocket>
+#include <QLockFile>
+#include <QStandardPaths>
 #include <QMenu>
 #include <QSystemTrayIcon>
 #include <cstdio>
@@ -133,8 +136,20 @@ int main(int argc, char** argv) {
     parser.addOptions({minimized, toggle, show, quit, fpsLimit, probe});
     parser.process(app);
 
-    // Já existe uma instância: apenas traz a janela de configuração para frente.
-    if (sendToRunning("show")) return 0;
+    // Instância única: um lock evita duas instâncias ao clicar duas vezes no
+    // atalho do menu; se já existe uma, apenas traz a janela para frente.
+    QString runDir = QStandardPaths::writableLocation(QStandardPaths::RuntimeLocation);
+    if (runDir.isEmpty()) runDir = QDir::tempPath();
+    QLockFile lock(runDir + QString("/linosd-%1.lock").arg(getuid()));
+    lock.setStaleLockTime(0);
+    if (!lock.tryLock(200)) {
+        for (int i = 0; i < 20; ++i) {
+            if (sendToRunning("show")) return 0;
+            QThread::msleep(100);
+        }
+        std::fprintf(stderr, "linosd: outra instância está iniciando.\n");
+        return 1;
+    }
 
     Config cfg = Config::load();
     MetricsCollector metrics;
