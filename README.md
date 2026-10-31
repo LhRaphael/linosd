@@ -7,24 +7,50 @@ Tem ainda limitador de FPS e uma interface gráfica para personalizar o OSD por 
 
 Escrito em **C++17** (núcleo, hooks e interface Qt), com scripts Bash para dependências, compilação e instalação.
 
-## Instalação rápida
+## Instalação (Debian, Ubuntu, Linux Mint, Pop!_OS e outras baseadas em apt)
 
 ```bash
-./scripts/install-deps.sh          # dependências (apt, dnf, pacman ou zypper)
-./scripts/build.sh                 # compila em build/
-./scripts/install.sh               # instala em ~/.local (sem sudo)
+./scripts/install-deps.sh     # compilador, CMake, Qt 6, headers do Vulkan, dpkg-dev, multilib
+./scripts/install.sh          # compila, gera os pacotes .deb e os instala com o apt
 ```
 
-Para jogos **32-bit** (jogos antigos e alguns títulos Wine/Proton 32-bit):
+O LinOSD é instalado como **pacote do sistema**, gerenciado pelo `apt`/`dpkg`. Ele aparece no menu de aplicativos e
+no painel, e os binários ficam no `PATH` como qualquer outro programa:
 
-```bash
-./scripts/install-deps.sh --32bit
-./scripts/build.sh --with-32bit
-./scripts/install.sh
-```
+| Caminho | Conteúdo |
+|---|---|
+| `/usr/bin/linosd`, `/usr/bin/linosd-run` | aplicativo e lançador de jogos |
+| `/usr/lib/x86_64-linux-gnu/linosd/` | hooks 64-bit (camada Vulkan + OpenGL) |
+| `/usr/lib/i386-linux-gnu/linosd/` | hooks 32-bit (pacote `linosd-hooks32:i386`) |
+| `/usr/share/vulkan/implicit_layer.d/linosd_*.json` | registro da camada Vulkan |
+| `/usr/share/applications/linosd.desktop` | atalho do menu (clique direito: mostrar/ocultar overlay, encerrar) |
+| `/usr/share/icons/hicolor/scalable/apps/linosd.svg` | ícone |
+| `/usr/share/metainfo/linosd.metainfo.xml` | metadados para lojas de aplicativos |
+| `/usr/share/man/man1/linosd.1.gz`, `linosd-run.1.gz` | `man linosd`, `man linosd-run` |
+| `/usr/share/doc/linosd/` | README, copyright e changelog |
 
-Outras opções: `./scripts/install.sh --system` instala em `/usr/local`, e
-`./scripts/install.sh --enable-cpu-power` libera a leitura do consumo da CPU (veja *Limitações*).
+Os hooks para **jogos 32-bit** ficam num pacote separado, `linosd-hooks32` (arquitetura i386, multiarch), como no
+Debian. Ele é instalado automaticamente se a arquitetura i386 já estiver habilitada, o que é o caso em quem tem a
+Steam. Para habilitá-la junto com a instalação: `./scripts/install.sh --enable-i386`.
+
+**Remover:** `sudo apt remove linosd`, que remove também o `linosd-hooks32`. Também funciona
+`./scripts/uninstall.sh`; com `--purge`, apaga ainda a configuração do usuário.
+
+**Só gerar os pacotes** (para instalar em outra máquina): `./scripts/package-deb.sh` grava os arquivos em `dist/`. Para
+instalar: `sudo apt install ./linosd_1.0.0-1_amd64.deb ./linosd-hooks32_1.0.0-1_i386.deb`. As dependências (ex.: as
+bibliotecas Qt 6) são calculadas pelo `dpkg-shlibdeps` para a versão da distribuição em que o pacote foi gerado; gere-o
+na mesma versão (ou mais antiga) do sistema de destino.
+
+O nome e o e-mail do mantenedor no pacote vêm de `DEBFULLNAME`/`DEBEMAIL` ou, na falta deles, do `git config`.
+
+### Outras opções
+
+| Comando | Efeito |
+|---|---|
+| `./scripts/install.sh --no-32bit` | sem os hooks 32-bit |
+| `./scripts/install.sh --user` | instalação manual só para o usuário, em `~/.local` (sem sudo, qualquer distribuição) |
+| `./scripts/install.sh --prefix /usr/local` | instalação manual em outro prefixo (distribuições sem apt) |
+| `./scripts/install.sh --enable-cpu-power` | libera a leitura do consumo da CPU (veja *Limitações*) |
 
 ## Uso
 
@@ -143,8 +169,9 @@ A NVML (`libnvidia-ml.so.1`) é carregada em tempo de execução: não é precis
 
 ```
 CMakeLists.txt
-scripts/   install-deps.sh  build.sh  install.sh  uninstall.sh
+scripts/   install-deps.sh  build.sh  package-deb.sh  install.sh  uninstall.sh
 data/      linosd-run.in  VkLayer_linosd.json.in  linosd.desktop  linosd.svg
+           linosd.metainfo.xml  linosd.1  linosd-run.1
 src/common/shm_protocol.h          protocolo de memória compartilhada
 src/hook/  frame_recorder  vk_layer  gl_hook (+ .map de símbolos exportados)
 src/core/  sysfs  system_monitor  gpu_monitor  frame_source
@@ -154,7 +181,7 @@ src/app/   main  config  metrics  osd_renderer  overlay_window  config_window  w
 ## Desinstalar
 
 ```bash
-./scripts/uninstall.sh            # ou --system; acrescente --purge para apagar a configuração
+sudo apt remove linosd          # ou: ./scripts/uninstall.sh [--purge]
 ```
 
 ## Próximos passos possíveis

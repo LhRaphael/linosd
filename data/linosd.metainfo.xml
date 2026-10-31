@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>linosd</id>
+  <metadata_license>CC0-1.0</metadata_license>
+  <name>LinOSD</name>
+  <developer id="linosd">
+    <name>LinOSD</name>
+  </developer>
+  <summary>Game performance overlay (FPS, 1% low, CPU, GPU, RAM, VRAM)</summary>
+  <summary xml:lang="pt-BR">Overlay de desempenho para jogos (FPS, 1% low, CPU, GPU, RAM, VRAM)</summary>
+  <description>
+    <p>
+      LinOSD shows an on-screen display over games with FPS, frametime, 1% and 0.1% lows,
+      a frametime graph, CPU and GPU usage, temperatures, clocks, power, RAM and VRAM,
+      in the style of MSI Afterburner. It includes an FPS limiter and a graphical editor
+      to customize colors, fonts, outline, shadow, background and position.
+    </p>
+    <p xml:lang="pt-BR">
+      O LinOSD exibe sobre os jogos FPS, frametime, 1% e 0.1% low, gráfico de frametime,
+      uso de CPU e GPU, temperaturas, clocks, consumo, RAM e VRAM, no estilo do MSI Afterburner.
+      Inclui limitador de FPS e um editor gráfico para personalizar cores, fontes, contorno,
+      sombra, plano de fundo e posição.
+    </p>
+  </description>
+  <launchable type="desktop-id">linosd.desktop</launchable>
+  <categories>
+    <category>Utility</category>
+    <category>System</category>
+  </categories>
+  <provides>
+    <binary>linosd</binary>
+    <binary>linosd-run</binary>
+  </provides>
+  <content_rating type="oars-1.1"/>
+  <releases>
+    <release version="@VERSION@" date="@DATE@"/>
+  </releases>
+</component>

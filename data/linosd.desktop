@@ -1,10 +1,28 @@
 [Desktop Entry]
 Type=Application
+Version=1.5
 Name=LinOSD
-GenericName=Monitor de desempenho para jogos
-Comment=Overlay com FPS, 1% low, uso de CPU/GPU, RAM, VRAM e temperaturas
+GenericName=Game Performance Overlay
+GenericName[pt_BR]=Monitor de desempenho para jogos
+Comment=Overlay with FPS, 1% low, CPU/GPU usage, RAM, VRAM and temperatures
+Comment[pt_BR]=Overlay com FPS, 1% low, uso de CPU/GPU, RAM, VRAM e temperaturas
 Exec=linosd
+TryExec=linosd
 Icon=linosd
 Terminal=false
-Categories=Utility;System;Monitor;Game;
-Keywords=fps;overlay;osd;afterburner;gpu;cpu;benchmark;
+StartupNotify=false
+StartupWMClass=linosd
+Categories=System;Monitor;
+Keywords=fps;overlay;osd;afterburner;rivatuner;gpu;cpu;benchmark;frametime;
+Keywords[pt_BR]=fps;overlay;osd;afterburner;desempenho;gpu;cpu;benchmark;frametime;
+Actions=toggle;quit;
+
+[Desktop Action toggle]
+Name=Show/hide overlay
+Name[pt_BR]=Mostrar/ocultar overlay
+Exec=linosd --toggle
+
+[Desktop Action quit]
+Name=Quit LinOSD
+Name[pt_BR]=Encerrar o LinOSD
+Exec=linosd --quit
